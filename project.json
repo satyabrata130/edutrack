@@ -1,0 +1,23 @@
+{
+  "overview": "EduTrack is a Student Performance Analysis and Reporting System with role-based access for Admins and Teachers. It supports Excel/CSV upload of student performance data with CO-wise attainment analysis, total mark calculation, and visualized reports.",
+  "features": [
+    "Secure login with role-based access (Admin and Teacher)",
+    "Excel/CSV upload for student performance data",
+    "CO-wise attainment analysis with charts (CO1-CO5)",
+    "Total mark auto-calculation (Midsem + Quiz + Assignment + Attendance)",
+    "Individual and class-level performance reports",
+    "Student search by name, roll number, or class",
+    "Persistent data storage with authenticated access"
+  ],
+  "category": "education",
+  "tags": [
+    "education",
+    "student-performance",
+    "analytics",
+    "excel-upload",
+    "co-analysis",
+    "reports",
+    "role-based-access"
+  ],
+  "last_updated": "2026-04-22T17:08:11.260Z"
+}

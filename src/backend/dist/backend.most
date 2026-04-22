@@ -1,0 +1,132 @@
+// Version: 1.0.0
+type CoMarks__282374855 =
+  {co1 : Nat; co2 : Nat; co3 : Nat; co4 : Nat; co5 : Nat};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type EnrollmentStatus__50183026 =
+  {#active; #graduated; #inactive; #suspended};
+type ExamId__379139927 = Nat;
+type ExamType__119332489 = {#assignment; #final; #midterm; #practical; #quiz};
+type Exam__212649150 =
+  {
+    createdAt : Timestamp__301639476;
+    var date : Text;
+    var examType : ExamType__119332489;
+    id : ExamId__379139927;
+    var maxMarks : Nat;
+    var name : Text
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MarkId__454837853 = Nat;
+type Mark__569588586 =
+  {
+    createdAt : Timestamp__301639476;
+    enteredBy : UserId__158757552;
+    examId : ExamId__379139927;
+    id : MarkId__454837853;
+    var marksObtained : Nat;
+    var remarks : Text;
+    studentId : StudentId__585118929;
+    subjectId : SubjectId__402408784
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PerformanceRecord__658361771 =
+  {
+    assignment : CoMarks__282374855;
+    attendance : CoMarks__282374855;
+    id : Nat;
+    midsem : CoMarks__282374855;
+    quiz : CoMarks__282374855;
+    studentId : StudentId__585118929;
+    subjectCode : Text;
+    totalMark : Nat;
+    uploadedAt : Timestamp__301639476;
+    uploadedBy : UserId__158757552
+  };
+type StudentId__585118929 = Nat;
+type Student__26715999 =
+  {
+    var className : Text;
+    var contact : Text;
+    createdAt : Timestamp__301639476;
+    var enrollmentStatus : EnrollmentStatus__50183026;
+    id : StudentId__585118929;
+    var name : Text;
+    var rollNumber : Text
+  };
+type SubjectId__402408784 = Nat;
+type Subject__220744571 =
+  {
+    var code : Text;
+    createdAt : Timestamp__301639476;
+    id : SubjectId__402408784;
+    var name : Text
+  };
+type TeacherRole__28189125 = {#admin; #teacher};
+type Teacher__896081680 =
+  {
+    createdAt : Timestamp__301639476;
+    id : UserId__158757552;
+    var name : Text;
+    var role : TeacherRole__28189125
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserRole__1073662873 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable exams :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Exam__212649150]];
+      var elementIndex : Nat__490723111
+    };
+  stable marks :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Mark__569588586]];
+      var elementIndex : Nat__490723111
+    };
+  stable nextExamId : {var value : Nat};
+  stable nextMarkId : {var value : Nat};
+  stable nextRecordId : {var value : Nat};
+  stable nextStudentId : {var value : Nat};
+  stable nextSubjectId : {var value : Nat};
+  stable performanceRecords :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?PerformanceRecord__658361771]];
+      var elementIndex : Nat__490723111
+    };
+  stable students :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Student__26715999]];
+      var elementIndex : Nat__490723111
+    };
+  stable subjects :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Subject__220744571]];
+      var elementIndex : Nat__490723111
+    };
+  stable teachers :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Teacher__896081680]];
+      var elementIndex : Nat__490723111
+    }
+};

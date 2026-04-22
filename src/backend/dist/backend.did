@@ -1,0 +1,246 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserId = principal;
+type UpsertMarkRequest = 
+ record {
+   examId: ExamId;
+   marksObtained: nat;
+   remarks: text;
+   studentId: StudentId;
+   subjectId: SubjectId;
+ };
+type UploadRecordRequest = 
+ record {
+   assignment: CoMarks;
+   attendance: CoMarks;
+   midsem: CoMarks;
+   quiz: CoMarks;
+   studentId: StudentId;
+   subjectCode: text;
+ };
+type UpdateTeacherRequest = 
+ record {
+   name: text;
+   role: TeacherRole;
+ };
+type UpdateStudentRequest = 
+ record {
+   className: text;
+   contact: text;
+   enrollmentStatus: EnrollmentStatus;
+   name: text;
+   rollNumber: text;
+ };
+type Timestamp = int;
+type TeacherView = 
+ record {
+   createdAt: Timestamp;
+   id: UserId;
+   name: text;
+   role: TeacherRole;
+ };
+type TeacherRole = 
+ variant {
+   admin;
+   teacher;
+ };
+type SubjectView = 
+ record {
+   code: text;
+   createdAt: Timestamp;
+   id: SubjectId;
+   name: text;
+ };
+type SubjectId = nat;
+type StudentView = 
+ record {
+   className: text;
+   contact: text;
+   createdAt: Timestamp;
+   enrollmentStatus: EnrollmentStatus;
+   id: StudentId;
+   name: text;
+   rollNumber: text;
+ };
+type StudentReport = 
+ record {
+   averageScore: float64;
+   className: text;
+   overallPassed: bool;
+   performances: vec StudentExamPerformance;
+   rollNumber: text;
+   studentId: StudentId;
+   studentName: text;
+ };
+type StudentId = nat;
+type StudentExamPerformance = 
+ record {
+   examId: ExamId;
+   examName: text;
+   marksObtained: nat;
+   maxMarks: nat;
+   passed: bool;
+   subjectId: SubjectId;
+   subjectName: text;
+ };
+type PerformanceRecordView = 
+ record {
+   assignment: CoMarks;
+   attendance: CoMarks;
+   id: nat;
+   midsem: CoMarks;
+   quiz: CoMarks;
+   studentId: StudentId;
+   subjectCode: text;
+   totalMark: nat;
+   uploadedAt: Timestamp;
+   uploadedBy: UserId;
+ };
+type MarkView = 
+ record {
+   createdAt: Timestamp;
+   enteredBy: UserId;
+   examId: ExamId;
+   id: MarkId;
+   marksObtained: nat;
+   remarks: text;
+   studentId: StudentId;
+   subjectId: SubjectId;
+ };
+type MarkId = nat;
+type ExamView = 
+ record {
+   createdAt: Timestamp;
+   date: text;
+   examType: ExamType;
+   id: ExamId;
+   maxMarks: nat;
+   name: text;
+ };
+type ExamType = 
+ variant {
+   assignment;
+   final;
+   midterm;
+   practical;
+   quiz;
+ };
+type ExamId = nat;
+type EnrollmentStatus = 
+ variant {
+   active;
+   graduated;
+   inactive;
+   suspended;
+ };
+type CreateTeacherRequest = 
+ record {
+   name: text;
+   "principal": UserId;
+   role: TeacherRole;
+ };
+type CreateSubjectRequest = 
+ record {
+   code: text;
+   name: text;
+ };
+type CreateStudentRequest = 
+ record {
+   className: text;
+   contact: text;
+   enrollmentStatus: EnrollmentStatus;
+   name: text;
+   rollNumber: text;
+ };
+type CreateExamRequest = 
+ record {
+   date: text;
+   examType: ExamType;
+   maxMarks: nat;
+   name: text;
+ };
+type CoMarks = 
+ record {
+   co1: nat;
+   co2: nat;
+   co3: nat;
+   co4: nat;
+   co5: nat;
+ };
+type CoAttainmentAnalysis = 
+ record {
+   coAttainments: vec CoAttainment;
+   subjectCode: text;
+   totalStudents: nat;
+ };
+type CoAttainment = 
+ record {
+   attainmentLevel: AttainmentLevel;
+   co: text;
+   passPercentage: float64;
+ };
+type ClassSubjectSummary = 
+ record {
+   averageScore: float64;
+   bottomStudent: opt text;
+   subjectId: SubjectId;
+   subjectName: text;
+   topStudent: opt text;
+ };
+type ClassReport = 
+ record {
+   bottomPerformers: vec text;
+   className: text;
+   examId: ExamId;
+   examName: text;
+   subjectSummaries: vec ClassSubjectSummary;
+   topPerformers: vec text;
+ };
+type AttainmentLevel = 
+ variant {
+   level1;
+   level2;
+   level3;
+ };
+service : {
+  _initializeAccessControl: () -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createExam: (req: CreateExamRequest) -> (ExamView);
+  createStudent: (req: CreateStudentRequest) -> (StudentView);
+  createSubject: (req: CreateSubjectRequest) -> (SubjectView);
+  createTeacher: (req: CreateTeacherRequest) -> (TeacherView);
+  deleteExam: (id: ExamId) -> ();
+  deleteStudent: (id: StudentId) -> ();
+  deleteSubject: (id: SubjectId) -> ();
+  deleteTeacher: (id: UserId) -> ();
+  deleteUploadedRecord: (id: nat) -> (bool);
+  getCallerTeacherProfile: () -> (opt TeacherView) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getClassReport: (className: text, examId: ExamId) -> (ClassReport) query;
+  getCoAttainmentAnalysis: (subjectCode: text) ->
+   (CoAttainmentAnalysis) query;
+  getStudent: (id: StudentId) -> (opt StudentView) query;
+  getStudentReport: (studentId: StudentId) -> (opt StudentReport) query;
+  getTeacher: (id: UserId) -> (opt TeacherView) query;
+  isCallerAdmin: () -> (bool) query;
+  listExams: () -> (vec ExamView) query;
+  listMarksForStudent: (studentId: StudentId) -> (vec MarkView) query;
+  listStudents: () -> (vec StudentView) query;
+  listSubjects: () -> (vec SubjectView) query;
+  listTeachers: () -> (vec TeacherView) query;
+  listUploadedPerformance: (subjectCode: opt text, studentId: opt nat) ->
+   (vec PerformanceRecordView) query;
+  registerOrUpdateTeacher: (name: text) -> (TeacherView);
+  searchStudents: (term: text) -> (vec StudentView) query;
+  updateExam: (id: ExamId, req: CreateExamRequest) -> (ExamView);
+  updateStudent: (id: StudentId, req: UpdateStudentRequest) -> (StudentView);
+  updateSubject: (id: SubjectId, req: CreateSubjectRequest) -> (SubjectView);
+  updateTeacher: (id: UserId, req: UpdateTeacherRequest) -> (TeacherView);
+  uploadPerformanceData: (requests: vec UploadRecordRequest) ->
+   (vec PerformanceRecordView);
+  upsertMark: (req: UpsertMarkRequest) -> (MarkView);
+}
